@@ -1,5 +1,5 @@
 ## 🌍 Live preview
-
+[Website preview](https://vitekdobrovsky.github.io/running-weather/)
 
 ## 🌟 Features
 
