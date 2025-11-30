@@ -1,6 +1,6 @@
 import LocationComponent from "./components/LocationComponent";
 import { recommendRunningClothes } from "./lib/recommendRunningClothes";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Shirt, Wind, Thermometer, CloudRain, CheckCircle2 } from "lucide-react";
 import { type WeatherData } from "./types";
 
@@ -32,7 +32,7 @@ function App() {
   const [clothes, setClothes] = useState<Array<string> | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 
-  const handleLocationRetrieved = async (lat: number, lng: number) => {
+  const handleLocationRetrieved = useCallback(async (lat: number, lng: number) => {
     try {
       const data = await fetch(`https://www.meteosource.com/api/v1/free/point?lat=${lat}&lon=${lng}&sections=current&language=en&units=auto&key=${import.meta.env.VITE_METEOSOURCE_API_KEY}`).then(
         (res) => res.json()
@@ -42,7 +42,7 @@ function App() {
     } catch (e) {
       console.error("Failed to fetch weather", e);
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100">
