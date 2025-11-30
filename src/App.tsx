@@ -48,7 +48,7 @@ function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100">
       <div className="max-w-2xl mx-auto px-4 py-12 space-y-8">
         <header className="text-center space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Run Ready 🏃</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Running weather 🏃</h1>
           <p className="text-slate-500">Smart clothing recommendations for your run</p>
         </header>
 

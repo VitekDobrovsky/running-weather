@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { MapPin, Loader2, AlertCircle } from "lucide-react";
 
 type LocationComponentProps = {
@@ -33,14 +33,6 @@ const LocationComponent: React.FC<LocationComponentProps> = ({ onLocationRetriev
       setError("Geolokace není podporována tímto prohlížečem.");
     }
   }, [onLocationRetrieved]);
-
-  useEffect(() => {
-    // Use setTimeout to avoid "setState synchronously within an effect" warning
-    const timer = setTimeout(() => {
-      getLocation();
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [getLocation]);
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4 p-6 bg-white rounded-xl shadow-sm border border-slate-100 w-full">
