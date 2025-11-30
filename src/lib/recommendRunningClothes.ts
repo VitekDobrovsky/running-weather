@@ -1,78 +1,52 @@
 import { type WeatherData } from "../types";
 
+function calculateWindChill(temp: number, windSpeed: number): number {
+  if (temp > 10) return temp;
+  const windKph = windSpeed * 3.6;
+  return 13.12 + 0.6215 * temp - 11.37 * Math.pow(windKph, 0.16) + 0.3965 * temp * Math.pow(windKph, 0.16);
+}
+
 export function recommendRunningClothes(weather: WeatherData): string[] {
   const temp = weather.current.temperature;
   const windSpeed = weather.current.wind.speed;
   const precipTotal = weather.current.precipitation.total;
-
+  const windChill = calculateWindChill(temp, windSpeed);
+  const runningAdjustedTemp = windChill + 10; // Offset for body heat
   const recommendations: string[] = [];
 
-  // Base recommendations based on temperature ranges
-  if (temp > 10) {
-    // Above 10 °C: Light top and shorts
-    recommendations.push("tank top"); // Lighter option for warmer weather
-    recommendations.push("shorts");
-  } else if (temp >= 5 && temp <= 10) {
-    // 5 °C to 10 °C: Light top, windbreaker, shorts
-    recommendations.push("shirt");
-    recommendations.push("windbreaker");
-    recommendations.push("shorts");
-  } else if (temp > 0 && temp < 5) {
-    // 0 °C to 5 °C: Thermal top, windbreaker, shorts (or tights, but borderline - suggest shorts)
-    recommendations.push("thermo compression shirt");
-    recommendations.push("windbreaker");
-    recommendations.push("shorts");
-  } else if (temp >= -5 && temp <= 0) {
-    // 0 °C and below (down to -5): Thermal tights + shorts, thermal top, windbreaker
-    recommendations.push("thermo compression shirt");
-    recommendations.push("thermo compression pants");
-    recommendations.push("shorts"); // Pants only with shorts
-    recommendations.push("windbreaker");
-  } else if (temp < -5) {
-    // Below –5 °C: Thermal tights + shorts, thermal top, mid-layer, windbreaker
-    recommendations.push("thermo compression shirt");
-    recommendations.push("shirt"); // As thin mid-layer
-    recommendations.push("thermo compression pants");
-    recommendations.push("shorts"); // Pants only with shorts
-    recommendations.push("windbreaker");
+  // Base recommendations by adjusted temp
+  if (runningAdjustedTemp > 20) {
+    recommendations.push("tank top", "shorts (really light)");
+  } else if (runningAdjustedTemp >= 15) {
+    recommendations.push("shirt", "shorts (really light)");
+  } else if (runningAdjustedTemp >= 10) {
+    recommendations.push("thermo compression shirt", "shorts (normal)");
+  } else if (runningAdjustedTemp >= 5) {
+    recommendations.push("thermo compression shirt", "windbreaker", "shorts (compression-layered)");
+  } else if (runningAdjustedTemp >= 0) {
+    recommendations.push("thermo compression shirt", "shirt", "windbreaker", "shorts (compression-layered)", "thermo compression pants");
+  } else {
+    recommendations.push("thermo compression shirt", "shirt", "windbreaker", "shorts (compression-layered)", "thermo compression pants");
   }
 
-  // Extras
-  if (temp < 5) {
-    recommendations.push("gloves");
+  // Conditionals for lighter options
+  if (runningAdjustedTemp >= 10 && (windSpeed > 5 || precipTotal > 0)) {
+    if (!recommendations.includes("windbreaker")) recommendations.push("windbreaker");
+    if (runningAdjustedTemp < 12) recommendations.push("thermo compression pants"); // Optional bottoms layer
   }
-  if (temp < 0) {
-    recommendations.push("hat");
+  if (runningAdjustedTemp >= 5 && windSpeed > 5) {
+    recommendations.push("shirt"); // Optional mid if windy
   }
 
-  // Adjustments for weather conditions
-  // If there's precipitation, ensure windbreaker is included for protection
+  // Accessories
+  if (runningAdjustedTemp < 12 || windSpeed > 5) recommendations.push("gloves");
+  if (runningAdjustedTemp < 5 || precipTotal > 0) recommendations.push("hat");
+
+  // Precipitation and wind adjustments (ensure but allow removal)
   if (precipTotal > 0 && !recommendations.includes("windbreaker")) {
     recommendations.push("windbreaker");
   }
 
-  // If wind is strong (e.g., > 5 m/s), ensure windbreaker
-  if (windSpeed > 5 && !recommendations.includes("windbreaker")) {
-    recommendations.push("windbreaker");
-  }
-
-  // Remove duplicates if any
+  // Remove duplicates
   return [...new Set(recommendations)];
 }
-
-// Example usage with the provided JSON data
-const exampleWeather: WeatherData = {
-  current: {
-    temperature: 1.2,
-    wind: {
-      speed: 2.4,
-    },
-    precipitation: {
-      total: 0,
-    },
-  },
-};
-
-const exampleRecommendations = recommendRunningClothes(exampleWeather);
-console.log(exampleRecommendations);
-// Output: ['thermo compression shirt', 'windbreaker', 'shorts', 'gloves']
