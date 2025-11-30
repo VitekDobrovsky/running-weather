@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { MapPin, Loader2, AlertCircle } from "lucide-react";
 
 type LocationComponentProps = {
@@ -10,7 +10,7 @@ const LocationComponent: React.FC<LocationComponentProps> = ({ onLocationRetriev
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getLocation = () => {
+  const getLocation = useCallback(() => {
     if (navigator.geolocation) {
       setLoading(true);
       navigator.geolocation.getCurrentPosition(
@@ -32,11 +32,7 @@ const LocationComponent: React.FC<LocationComponentProps> = ({ onLocationRetriev
     } else {
       setError("Geolokace není podporována tímto prohlížečem.");
     }
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
+  }, [onLocationRetrieved]);
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4 p-6 bg-white rounded-xl shadow-sm border border-slate-100 w-full">
@@ -70,7 +66,7 @@ const LocationComponent: React.FC<LocationComponentProps> = ({ onLocationRetriev
         disabled={loading}
         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
       >
-        {loading ? "Updating..." : "Update Location"}
+        {loading ? "Locating..." : location.lat ? "Update Location" : "Get Location"}
       </button>
     </div>
   );
