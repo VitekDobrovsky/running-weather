@@ -1,6 +1,6 @@
 {
   "homepage": "https://vitekdobrovsky.github.io/running-weather",
-  "name": "clothes-for-todays-run",
+  "name": "running-weather",
   "private": true,
   "version": "0.0.0",
   "type": "module",
