@@ -13,9 +13,7 @@ if (!import.meta.env.VITE_METEOSOURCE_API_KEY) {
       <p>
         Please create a <code>.env</code> file in the root of your project and add your API key:
       </p>
-      <pre style={{ background: "#f0f0f0", padding: "10px", borderRadius: "4px" }}>
-        VITE_METEOSOURCE_API_KEY=your_api_key_here
-      </pre>
+      <pre style={{ background: "#f0f0f0", padding: "10px", borderRadius: "4px" }}>VITE_METEOSOURCE_API_KEY=your_api_key_here</pre>
     </div>
   );
 } else {
