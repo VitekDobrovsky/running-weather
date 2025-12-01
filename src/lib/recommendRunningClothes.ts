@@ -39,8 +39,8 @@ export function recommendRunningClothes(weather: WeatherData): string[] {
   }
 
   // Accessories
-  if (runningAdjustedTemp < 12 || windSpeed > 5) recommendations.push("gloves");
-  if (runningAdjustedTemp < 5 || precipTotal > 0) recommendations.push("hat");
+  if (runningAdjustedTemp < 12 || (windSpeed > 5 && runningAdjustedTemp < 12)) recommendations.push("gloves");
+  if (runningAdjustedTemp < 12 || ((precipTotal > 0 || windSpeed > 5) && runningAdjustedTemp < 12)) recommendations.push("hat");
 
   // Precipitation and wind adjustments (ensure but allow removal)
   if (precipTotal > 0 && !recommendations.includes("windbreaker")) {
